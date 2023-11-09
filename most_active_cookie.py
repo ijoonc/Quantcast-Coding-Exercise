@@ -95,9 +95,9 @@ def create_custom_csv_file(num_lines: int) -> None:
             # Make sure to have at most num_lines + 1 lines of data (including the header)
             if len(data) - 1 == num_lines: break
 
-    
-    # We need to sort the timestamps
     rows = data[1:]
+
+    # We need to sort by timestamp
     sorted_rows = sorted(rows, key = lambda row: row[0].split(',')[1], reverse=True)
     sorted_data = [header] + sorted_rows
     create_csv_file(sorted_data, 'more_cookie_log.csv')
@@ -336,7 +336,6 @@ def most_active_cookie_binary_search(csv_file: str, date: str) -> None:
                 if cookie_date == date:
                     counter, max_freq = frequency_update(counter, max_freq, cookie_name)
                     left -= 1
-
                 else:
                     break
 
@@ -348,7 +347,6 @@ def most_active_cookie_binary_search(csv_file: str, date: str) -> None:
                 if cookie_date == date:
                     counter, max_freq = frequency_update(counter, max_freq, cookie_name)
                     right += 1
-                
                 else:
                     break
             
