@@ -22,16 +22,15 @@ data = [
 ##################        CSV File Creation + Checker       ################## 
 ##############################################################################
 
-def create_csv_file(data: List[List[str]]) -> None:
+def create_csv_file(data: List[List[str]], filename: str) -> None:
     """
         Helper function to create a csv file with the given data.
         The data should be of the form: [ [line1], [line2], ... ]
 
-        Params: data (a list of lists containing data for the cookies log).
+        Params: data     (a list of lists containing data for the cookies log).
+                filename (the name of the csv file we want to create).
         Returns: Nothing (instead, it writes a csv file to the current directory).
     """
-
-    filename = 'more_cookie_log.csv'
 
     # newline='' --> uses the default line ending: '\n'
     with open(filename, 'w', newline='') as csvfile:
@@ -51,14 +50,18 @@ def create_custom_csv_file(num_lines: int) -> None:
         Returns: None, but utilizes create_csv_file to create a brand new csv file of our cookie logs.
     """
 
+    if num_lines < 1:
+        raise ValueError("Invalid Number of Lines. Requires at least one line to create a CSV file.")
+    
     header = ['cookie,timestamp']
     data = [header]
 
-    for _ in range(num_lines):
+    for i in range(num_lines):
         # A cookie name consists of 16 characters with random alphanumeric characters
         cookie_name = ''.join(random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") for _ in range(16))
 
         # Datetime objects make it easier for us to extract date and time data
+        # All months have 28 days so there should be no datetime object conflicts
         datetime_obj = (datetime(2023, random.randint(1, 12), random.randint(1, 28)))   # Keeping year the same is my personal design choice
         date = str(datetime_obj.date())
 
@@ -72,12 +75,32 @@ def create_custom_csv_file(num_lines: int) -> None:
         
         # {cookie_name},{date}T{time}:{extra_time}
         data.append([cookie_name + ',' + date + 'T' + time + ':' + extra_time])
+
+        # Extra cases so not all cookies are unique for each date
+        if i % 2 == 0:
+            data.append([cookie_name + ',' + date + 'T' + time + ':' + extra_time])
+
+            # Make sure to have at most num_lines + 1 lines of data (including the header)
+            if len(data) - 1 == num_lines: break
+            
+        if i % 4 == 0:
+            data.append([cookie_name + ',' + date + 'T' + time + ':' + extra_time])
+
+            # Make sure to have at most num_lines + 1 lines of data (including the header)
+            if len(data) - 1 == num_lines: break
+        
+        if i % 6 == 0:
+            data.append([cookie_name + ',' + date + 'T' + time + ':' + extra_time])
+
+            # Make sure to have at most num_lines + 1 lines of data (including the header)
+            if len(data) - 1 == num_lines: break
+
     
     # We need to sort the timestamps
     rows = data[1:]
     sorted_rows = sorted(rows, key = lambda row: row[0].split(',')[1], reverse=True)
     sorted_data = [header] + sorted_rows
-    create_csv_file(sorted_data)
+    create_csv_file(sorted_data, 'more_cookie_log.csv')
 
 
 ##############################################################################
@@ -111,11 +134,15 @@ def valid_date(date: str) -> None:
         Returns: None, but raises an error if the year, month, day, or the entire date is invalid.
     """
 
+    if len(date.split('-')) != 3:
+        raise ValueError("Invalid date format. Requires xxxx-xx-xx format.")
+
     year, month, day = date.split('-')
 
     if len(year) != 4 or len(month) != 2 or len(day) != 2:
         raise ValueError("Invalid date format. Requires xxxx-xx-xx format.")
     
+    # Year can be any four digit value wheras month and day cannot
     year, month, day = int(year), int(month), int(day)
 
     if month < 1 or month > 12:
@@ -354,8 +381,13 @@ def main():
     filename = args.filename
     date = args.date
 
+    # Validate the csv filename and given date first
+    valid_csv(filename)
+    valid_date(date)
+
     # Two functions that find the most active cookie
     most_active_cookie(filename, date)
+    print()
     most_active_cookie_binary_search(filename, date)
 
 
@@ -364,8 +396,8 @@ if __name__ == '__main__':
         It's best to run one of these functions at a time.
     """
 
-    # create_csv_file(data)
-    # create_custom_csv_file(10)
-    main()
+    # create_csv_file(data, 'cookie_log.csv')
+    create_custom_csv_file(1000)
+    # main()
 
 
