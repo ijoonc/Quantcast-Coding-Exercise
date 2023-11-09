@@ -22,7 +22,7 @@ class Cookie_Finder:
 
         self.filename = filename            # Store the filename for future uses
         self.date = date                    # Date of interest
-        self.freq_map = {}                  # Frequency of each cookie given the date of interest; (Key: cookie name, Value: frequency of pair)
+        self.freq_map = {}                  # Frequency of each cookie given the date of interest; (Key: cookie name, Value: frequency of cookie)
         self.max_freq = 0                   # Frequency of the most occurring cookie in a given date
 
 
@@ -31,10 +31,11 @@ class Cookie_Finder:
     ##############################################################################
 
     '''
-        We are assuming that the cookie,timestamp format is consistent in the data given.
+        We are assuming that the cookie,timestamp format is consistent in the data.
         Hence, the cookie name should already be valid as well as the timestamp. 
         For now, we do not want to pay attention to the time (in UTC), but rather the date.
     '''
+
 
     @staticmethod
     def valid_csv(filename: str) -> None:
@@ -175,7 +176,7 @@ class Cookie_Finder:
 
     def binary_search(self, csv_data: List[str], left: int, right: int) -> Tuple[int, int]:
         """
-            This is a helper function to most_active_cookie_binary_search(csv_file, date).
+            This is a helper function to most_active_cookie_binary_search().
             We perform binary search on the rows of the cookies data to find the FIRST
             row with the given date.
 
@@ -306,18 +307,14 @@ def main():
     cookie_finder = Cookie_Finder(filename, date)
 
     # Two functions that find the most active cookie
-    cookie_finder.full_traversal_search()                   # Full Traversal Method
+    # cookie_finder.full_traversal_search()                   # Full Traversal Method
     # print()
-    # cookie_finder.most_active_cookie_binary_search()        # Binary Search Method
+    cookie_finder.most_active_cookie_binary_search()        # Binary Search Method
 
 
 if __name__ == '__main__':
     """
         It's best to run one of these functions at a time.
     """
-
-    # create_csv_file(data, 'cookie_log.csv')       # Create cookie logs from manual data
-    # create_custom_csv_file(1000)                  # Create cookie logs from auto-generated data
+    
     main()                                          # Run the functions to find most active cookie
-
-

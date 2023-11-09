@@ -14,6 +14,7 @@ class TestMostActiveCookie(unittest.TestCase):
         Testing Method: Python's Unittests.
     """
 
+
     def test_valid_csv_file(self):
         """
             Test whether the given filename is a valid CSV file.
@@ -187,6 +188,7 @@ class TestMostActiveCookie(unittest.TestCase):
 )
         self.assertEqual(cookie_name2, "QIRTZYrZcfijihAr")
         self.assertEqual(cookie_date2, "2023-12-26")
+    
     
     def test_full_traversal_search(self):
         """
